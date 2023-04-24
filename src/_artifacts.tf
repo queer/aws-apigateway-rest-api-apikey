@@ -10,6 +10,9 @@ resource "massdriver_artifact" "api_gateway" {
           stage_arn        = module.api_gateway.stage_arn
           root_resource_id = module.api_gateway.root_resource_id
         }
+        api_key = {
+          key = aws_api_gateway_api_key.api_key.value
+        }
       }
       specs = {
         aws = {
