@@ -106,9 +106,12 @@ connections:
 artifacts:
   required:
     - api_gateway
+    - api
   properties:
     api_gateway:
       $ref: massdriver/aws-api-gateway-rest-api
+    api:
+      $ref: massdriver/api
 
 # schema-ui.json
 # List of form customizations for params-schema
