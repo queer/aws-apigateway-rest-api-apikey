@@ -10,9 +10,6 @@ resource "massdriver_artifact" "api_gateway" {
           stage_arn        = module.api_gateway.stage_arn
           root_resource_id = module.api_gateway.root_resource_id
         }
-        api_key = {
-          key = aws_api_gateway_api_key.api_key.value
-        }
       }
       specs = {
         aws = {
@@ -26,22 +23,24 @@ resource "massdriver_artifact" "api_gateway" {
 resource "massdriver_artifact" "api" {
   field                = "api"
   provider_resource_id = module.api_gateway.arn
-  name                 = "Api Authentication: ${var.md_metadata.name_prefix}"
+  name                 = "Api: ${var.md_metadata.name_prefix}"
   artifact = jsonencode(
     {
       data = {
         api = {
-          hostname = var.dns.enabled ? "${var.dns.sub_domain}.${data.aws_route53_zone.lookup[0].name}" : "${local.api_id}.execute-api.${var.rest_api.region}.amazonaws.com/${var.rest_api.stage_name}"
+          hostname = "${local.fq_domain}"
           port     = 443
           protocol = "https"
         }
-        etc = {
-          api_key = aws_api_gateway_api_key.api_key.value
+        extra = {
+          fq_domain = "${local.fq_domain}"
+          url     = "https://${local.fq_domain}:443"
+          api_key = resource.aws_api_gateway_api_key.api_key.value
         }
       }
       specs = {
         api = {
-          version = "1"
+          version = "v1"
         }
         aws = {
           region = var.rest_api.region

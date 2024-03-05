@@ -9,8 +9,6 @@ resource "aws_api_gateway_rest_api" "main" {
   endpoint_configuration {
     types = [var.endpoint_configuration]
   }
-
-  api_key_source = "HEADER"
 }
 
 resource "aws_api_gateway_resource" "health_check" {
